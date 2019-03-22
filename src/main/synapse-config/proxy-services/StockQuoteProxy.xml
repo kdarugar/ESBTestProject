@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="StockQuoteProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <endpoint name="endpoint_urn_uuid_82079874-184a-47fd-8093-75e7668cedf4">
+            <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+        </endpoint>
+        <inSequence/>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </target>
+    <publishWSDL preservePolicy="true" uri="file:/Library/WSO2/EnterpriseIntegrator/6.4.0/samples/service-bus/resources/proxy/sample_proxy_1.wsdl"/>
+</proxy>

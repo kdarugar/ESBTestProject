@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/POC" hostname="localhost" name="GreetingRESTAPI" port="8280" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" protocol="http" uri-template="/greet">
+        <inSequence>
+            <log description="enter log">
+                <property name="enterLog" value="++++ Entering GreetingRestAPI ++++"/>
+            </log>
+            <property description="getName" expression="$url:username" name="username" scope="default" type="STRING"/>
+            <filter regex="^(\w+\S+)$" source="get-property('username')">
+                <then>
+                    <log>
+                        <property expression="fn:concat('++++ username is  valid ' , get-property('username') )" name="LogParameterName"/>
+                    </log>
+                    <payloadFactory media-type="text">
+                        <format>Greeting : $1</format>
+                        <args>
+                            <arg evaluator="xml" expression="fn:concat('Hello ', get-property('username'), ' have great day! ') "/>
+                        </args>
+                    </payloadFactory>
+                </then>
+                <else>
+                    <log>
+                        <property name="LogInvalidParamStatus" value="!!!!username is not valid!!!!"/>
+                    </log>
+                    <payloadFactory media-type="text">
+                        <format>“message”:$1</format>
+                        <args>
+                            <arg value="Sorry the username is not provided, you cannot be greeted if you do not provide a username. "/>
+                        </args>
+                    </payloadFactory>
+                </else>
+            </filter>
+            <log description="Fault Log">
+                <property name="leaveLog" value="++++ leaving GreetingRestAPI! ++++"/>
+            </log>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence>
+            <log description="Fault Log">
+                <property name="faultLog" value="++++ Fault thrown in GreetingRestAPI! ++++"/>
+                <property expression="$ctx:ERROR_MESSAGE" name="Message"/>
+                <property expression="get-property('ERROR_MESSAGE')" name="Cause"/>
+            </log>
+        </faultSequence>
+    </resource>
+</api>

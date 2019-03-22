@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="CalculatorProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <endpoint name="endpoint_urn_uuid_9701696a-e353-40b4-920c-bd0ac16667b5">
+            <address uri="http://ws1.parasoft.com/glue/calculator"/>
+        </endpoint>
+        <inSequence>
+            <log description="Enter Log">
+                <property name="EnterLog" value="++++ Entering Calculator Proxy Service ++++"/>
+            </log>
+        </inSequence>
+        <outSequence>
+            <log description="Leave Log">
+                <property name="Leave Log" value="++++ Leaving Calculator Proxy Service ++++"/>
+            </log>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <log description="Fault Log">
+                <property name="faultLog" value="++++ Fault thrown in Calculator Proxy Service ++++"/>
+                <property expression="$ctx:ERROR_MESSAGE" name="Message"/>
+                <property expression="get-property('ERROR_MESSAGE')" name="Cause"/>
+            </log>
+        </faultSequence>
+    </target>
+    <publishWSDL preservePolicy="true" uri="file:/Library/WSO2/EnterpriseIntegrator/6.4.0/samples/service-bus/resources/proxy/calculator.wsdl"/>
+</proxy>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/restGreeting" hostname="localhost" name="RestWeatherAPI" port="8280" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" protocol="http">
+        <inSequence>
+            <log description="enter log">
+                <property name="enterLog" value="++++ Entering MyRestAPI2 ++++"/>
+            </log>
+            <property expression="$url:username" name="username" scope="default" type="STRING"/>
+            <log>
+                <property expression="get-property('username')" name="username"/>
+            </log>
+            <send>
+                <endpoint>
+                    <http method="get" uri-template="http://worldclockapi.com/api/json/utc/now"/>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <log description="leave log">
+                <property name="leaveLog" value="++++ Leaving MyRestAPI ++++"/>
+            </log>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <log description="Fault Log">
+                <property name="faultLog" value="++++ Fault thrown! ++++"/>
+                <property expression="$ctx:ERROR_MESSAGE" name="Message"/>
+                <property expression="get-property('ERROR_MESSAGE')" name="Cause"/>
+            </log>
+        </faultSequence>
+    </resource>
+</api>
